@@ -1,0 +1,289 @@
+<div class="bg-surface-container-lowest text-on-surface min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-[#0a0e19] text-primary font-headline text-sm tracking-tight fixed top-0 left-0 w-full h-16 flex justify-between items-center px-8 z-50">
+    <div class="flex items-center gap-12">
+      <span class="font-headline text-2xl font-bold tracking-tighter text-on-surface">KINETIC_ARCH</span>
+      <nav class="hidden md:flex gap-8">
+        <button
+          (click)="irDashboard()"
+          class="text-outline-variant hover:text-on-surface transition-colors cursor-pointer">
+          Dashboard
+        </button>
+        <span class="text-primary font-bold border-b-2 border-primary pb-1">Historial</span>
+      </nav>
+    </div>
+    <div class="flex items-center gap-4">
+      <button
+        (click)="cerrarSesion()"
+        class="text-slate-400 hover:text-slate-200 transition-colors px-3 py-2 text-sm">
+        Salir
+      </button>
+      <div class="flex items-center gap-3 bg-slate-800/50 rounded-lg px-3 py-1.5">
+        <span class="text-sm font-medium text-slate-200">{{ usuario()?.nombre }}</span>
+        <div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-xs font-bold">
+          {{ obtenerIniciales() }}
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex pt-16 min-h-screen">
+
+    <!-- Sidebar -->
+    <aside class="fixed left-0 top-16 h-[calc(100vh-64px)] w-64 flex flex-col py-6 bg-[#0f131e] border-r border-outline-variant/5">
+      <div class="px-6 mb-8">
+        <div class="flex items-center gap-3 mb-1">
+          <div class="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+          <span class="text-xs font-bold tracking-widest text-on-surface-variant uppercase">Command Center</span>
+        </div>
+        <span class="text-[10px] text-outline opacity-60 font-mono">v2.4.0-obsidian</span>
+      </div>
+
+      <div class="flex-1 flex flex-col gap-1">
+        <button
+          (click)="irDashboard()"
+          class="text-outline hover:text-on-surface flex items-center gap-3 py-3 px-4 hover:bg-surface-container-high rounded-lg mx-2 transition-all cursor-pointer">
+          <span class="material-symbols-outlined">dashboard</span>
+          <span class="text-sm">Dashboard</span>
+        </button>
+        <div class="text-primary font-semibold flex items-center gap-3 py-3 px-4 bg-surface-container-high rounded-lg mx-2 transition-all">
+          <span class="material-symbols-outlined">history</span>
+          <span class="text-sm">Prompt History</span>
+        </div>
+      </div>
+
+      <div class="px-4 mt-auto space-y-1 border-t border-outline-variant/5 pt-4">
+        <button
+          (click)="irDashboard()"
+          class="w-full bg-primary-container text-on-primary-container font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 mb-4 active:opacity-80 transition-all">
+          <span class="material-symbols-outlined text-sm">add</span>
+          <span>Nuevo Prompt</span>
+        </button>
+        <button
+          (click)="cerrarSesion()"
+          class="w-full text-outline hover:text-on-surface flex items-center gap-3 py-3 px-4 hover:bg-surface-container-high rounded-lg transition-all">
+          <span class="material-symbols-outlined">logout</span>
+          <span class="text-sm">Salir</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Contenido principal -->
+    <main class="ml-64 flex-1 px-12 py-12 bg-surface-dim">
+
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+        <div class="max-w-2xl">
+          <h1 class="font-headline text-5xl font-extrabold tracking-tighter mb-4 text-on-surface">
+            Prompt Archives
+          </h1>
+          <p class="text-on-surface-variant text-lg leading-relaxed opacity-80">
+            Historial de prompts generados. Revisa, copia y gestiona tus estructuras anteriores.
+          </p>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="flex bg-surface-container-high p-1 rounded-xl">
+            <button
+              (click)="cambiarFiltro('todos')"
+              [class.bg-primary-container]="filtroActivo() === 'todos'"
+              [class.text-on-primary-container]="filtroActivo() === 'todos'"
+              [class.text-on-surface-variant]="filtroActivo() !== 'todos'"
+              class="px-6 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all">
+              Todos
+            </button>
+            <button
+              (click)="cambiarFiltro('favoritos')"
+              [class.bg-primary-container]="filtroActivo() === 'favoritos'"
+              [class.text-on-primary-container]="filtroActivo() === 'favoritos'"
+              [class.text-on-surface-variant]="filtroActivo() !== 'favoritos'"
+              class="px-6 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all">
+              Favoritos
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-12 gap-8 mb-16">
+        <div class="col-span-12 lg:col-span-8 bg-surface-container p-8 rounded-full border border-outline-variant/10 relative overflow-hidden flex items-center justify-between">
+          <div class="relative z-10">
+            <span class="text-xs uppercase tracking-[0.2em] text-primary font-bold block mb-2">Neural Workspace Status</span>
+            <h2 class="text-3xl font-bold font-headline">{{ prompts().length }} Prompts Generados</h2>
+          </div>
+          <div class="flex gap-4 relative z-10">
+            <div class="text-right">
+              <span class="block text-xl font-bold font-headline">{{ prompts().length }}</span>
+              <span class="text-[10px] text-on-surface-variant opacity-60 uppercase">Total</span>
+            </div>
+            <div class="w-px h-10 bg-outline-variant/20"></div>
+            <div class="text-right">
+              <span class="block text-xl font-bold font-headline">{{ totalFavoritos() }}</span>
+              <span class="text-[10px] text-on-surface-variant opacity-60 uppercase">Favoritos</span>
+            </div>
+          </div>
+          <div class="absolute right-0 top-0 w-64 h-full opacity-10 pointer-events-none">
+            <div class="w-full h-full bg-gradient-to-l from-primary to-transparent"></div>
+          </div>
+        </div>
+
+        <div class="col-span-12 lg:col-span-4 bg-surface-container-high p-8 rounded-full border border-outline-variant/5 flex items-center gap-6">
+          <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined">bolt</span>
+          </div>
+          <div>
+            <span class="block text-on-surface-variant text-xs font-medium">Último Prompt</span>
+            <span class="block text-lg font-bold truncate max-w-40">
+              {{ prompts().length > 0 ? prompts()[0].tipoProyecto : 'Sin prompts' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      @if (errorMensaje()) {
+        <div class="bg-error-container/20 border border-error/20 text-error rounded-xl px-4 py-3 text-sm mb-6 flex items-center gap-2">
+          <span class="material-symbols-outlined text-sm">error</span>
+          {{ errorMensaje() }}
+        </div>
+      }
+
+      @if (cargando()) {
+        <div class="flex items-center justify-center py-24">
+          <span class="material-symbols-outlined text-primary text-4xl animate-spin">progress_activity</span>
+        </div>
+      }
+
+      @if (!cargando()) {
+        <div class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-6">
+
+          @for (prompt of promptsFiltrados; track prompt._id) {
+            <div class="bg-surface-container-low hover:bg-surface-container rounded-xl p-6 transition-all duration-300 group border border-transparent hover:border-outline-variant/20">
+              <div class="flex justify-between items-start mb-6">
+                <div class="flex items-center gap-3">
+                  <div class="p-2 bg-surface-container-highest rounded-lg">
+                    <span class="material-symbols-outlined text-primary">terminal</span>
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-on-surface group-hover:text-primary transition-colors truncate max-w-40">
+                      {{ prompt.documento.nombreArchivo }}
+                    </h3>
+                    <span class="text-[10px] text-on-surface-variant opacity-50 uppercase tracking-widest">
+                      {{ formatearFecha(prompt.createdAt) }}
+                    </span>
+                  </div>
+                </div>
+                <button
+                  (click)="toggleFavorito($event, prompt._id)"
+                  [class.text-tertiary]="prompt.favorito"
+                  [class.text-on-surface-variant]="!prompt.favorito"
+                  class="transition-colors">
+                  <span
+                    class="material-symbols-outlined"
+                    [style.font-variation-settings]="prompt.favorito ? '\'FILL\' 1' : '\'FILL\' 0'">
+                    favorite
+                  </span>
+                </button>
+              </div>
+
+              <div class="flex flex-wrap gap-2 mb-8">
+                <span class="px-2 py-1 bg-surface-container-highest text-[10px] font-bold text-on-surface-variant rounded uppercase">
+                  {{ prompt.tipoProyecto }}
+                </span>
+                @for (tech of prompt.tecnologiasDetectadas.slice(0, 2); track tech) {
+                  <span class="px-2 py-1 bg-surface-container-highest text-[10px] font-bold text-on-surface-variant rounded uppercase">
+                    {{ tech }}
+                  </span>
+                }
+              </div>
+
+              <div class="flex items-center justify-between gap-3">
+                <button
+                  (click)="verPrompt(prompt)"
+                  class="flex-1 bg-primary text-on-primary font-bold py-2.5 rounded-lg text-sm transition-all active:scale-95 hover:bg-primary/90">
+                  Ver Prompt Completo
+                </button>
+                <button
+                  (click)="eliminarPrompt($event, prompt._id)"
+                  class="p-2.5 text-on-surface-variant hover:bg-error/10 hover:text-error rounded-lg transition-all">
+                  <span class="material-symbols-outlined">delete</span>
+                </button>
+              </div>
+            </div>
+          }
+
+          @if (promptsFiltrados.length === 0) {
+            <div class="col-span-full border-2 border-dashed border-outline-variant/20 rounded-xl p-12 flex flex-col items-center justify-center gap-4">
+              <span class="material-symbols-outlined text-4xl text-outline">history</span>
+              <p class="text-on-surface-variant text-sm uppercase tracking-widest">
+                {{ filtroActivo() === 'favoritos' ? 'No tienes favoritos aún' : 'No hay prompts generados aún' }}
+              </p>
+              <button
+                (click)="irDashboard()"
+                class="bg-primary-container text-on-primary-container font-bold py-2 px-6 rounded-xl text-sm transition-all active:scale-95">
+                Generar mi primer prompt
+              </button>
+            </div>
+          }
+
+        </div>
+      }
+
+      <footer class="mt-24 pt-8 border-t border-outline-variant/10 flex justify-between items-center text-[10px] text-on-surface-variant opacity-40 uppercase tracking-[0.3em]">
+        <span>© 2024 Kinetic Architect</span>
+        <span>Sistema Operacional</span>
+        <span>Security Level: Alpha-7</span>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- Modal -->
+  @if (promptSeleccionado()) {
+    <div class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-6">
+      <div class="bg-surface-container-low rounded-2xl w-full max-w-3xl max-h-[85vh] flex flex-col border border-outline-variant/20">
+
+        <div class="flex items-center justify-between p-6 border-b border-outline-variant/10">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary">auto_awesome</span>
+            <h3 class="font-headline text-xl font-bold text-on-surface">Prompt Completo</h3>
+          </div>
+          <div class="flex items-center gap-3">
+            <button
+              (click)="copiarPrompt()"
+              class="flex items-center gap-2 px-4 py-2 bg-surface-container-highest text-on-surface-variant hover:text-on-surface rounded-xl text-sm transition-all">
+              <span class="material-symbols-outlined text-sm">content_copy</span>
+              Copiar
+            </button>
+            <button
+              (click)="descargarPrompt()"
+              class="flex items-center gap-2 px-4 py-2 bg-surface-container-highest text-on-surface-variant hover:text-on-surface rounded-xl text-sm transition-all">
+              <span class="material-symbols-outlined text-sm">download</span>
+              Descargar
+            </button>
+            <button
+              (click)="cerrarDetalle()"
+              class="p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest rounded-xl transition-all">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2 px-6 py-4 border-b border-outline-variant/10">
+          <span class="px-3 py-1.5 rounded-full bg-primary text-on-primary text-[10px] font-bold uppercase">
+            {{ promptSeleccionado()!.tipoProyecto }}
+          </span>
+          @for (tech of promptSeleccionado()!.tecnologiasDetectadas; track tech) {
+            <span class="px-3 py-1.5 rounded-full bg-surface-container-highest text-on-surface-variant text-[10px] font-bold">
+              {{ tech }}
+            </span>
+          }
+        </div>
+
+        <div class="overflow-y-auto p-6 flex-1">
+          <pre class="bg-surface-container-highest rounded-xl p-6 text-on-surface-variant text-sm leading-relaxed whitespace-pre-wrap font-body">{{ promptSeleccionado()!.promptFinal }}</pre>
+        </div>
+
+      </div>
+    </div>
+  }
+
+</div>

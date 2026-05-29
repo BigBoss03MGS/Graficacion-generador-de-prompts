@@ -1,0 +1,172 @@
+<div class="bg-surface-container-lowest min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-slate-950/60 backdrop-blur-xl font-headline tracking-tight sticky top-0 z-50">
+    <div class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+      <div class="text-2xl font-bold tracking-tighter text-primary uppercase">KINETIC_ARCH</div>
+      <nav class="hidden md:flex items-center gap-8">
+        <button
+          (click)="irDashboard()"
+          class="text-slate-400 hover:text-slate-200 transition-colors">
+          Dashboard
+        </button>
+        <button
+          (click)="irHistorial()"
+          class="text-slate-400 hover:text-slate-200 transition-colors">
+          Historial
+        </button>
+      </nav>
+      <div class="flex items-center gap-4">
+        <button
+          (click)="cerrarSesion()"
+          class="text-slate-400 hover:text-slate-200 transition-colors px-3 py-2 text-sm font-medium">
+          Salir
+        </button>
+        <div class="flex items-center gap-3 bg-slate-800/50 rounded-lg px-3 py-1.5">
+          <span class="text-sm font-medium text-slate-200">{{ usuario()?.nombre }}</span>
+          <div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-xs font-bold">
+            {{ obtenerIniciales() }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex min-h-screen">
+
+    <!-- Sidebar -->
+    <aside class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 bg-slate-950 py-8 gap-4 pt-24 z-40 font-headline font-medium">
+      <div class="px-6 mb-8">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-surface-container-highest flex items-center justify-center">
+            <span class="material-symbols-outlined text-primary">architecture</span>
+          </div>
+          <div>
+            <div class="text-sm font-bold text-on-surface">{{ usuario()?.nombre }}</div>
+            <div class="text-[10px] text-slate-500 uppercase tracking-widest">Pro Architect</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-1 pr-4">
+        <button
+          (click)="irDashboard()"
+          class="text-slate-500 hover:text-slate-300 flex items-center gap-4 px-6 py-3 transition-all duration-300">
+          <span class="material-symbols-outlined">dashboard</span>
+          <span>Dashboard</span>
+        </button>
+        <button
+          (click)="irHistorial()"
+          class="text-slate-500 hover:text-slate-300 flex items-center gap-4 px-6 py-3 transition-all duration-300">
+          <span class="material-symbols-outlined">history</span>
+          <span>Historial</span>
+        </button>
+      </div>
+
+      <div class="mt-auto flex flex-col gap-1 pr-4">
+        <div class="bg-slate-800/80 text-primary rounded-r-full flex items-center gap-4 px-6 py-3">
+          <span class="material-symbols-outlined">settings</span>
+          <span>Configuración</span>
+        </div>
+        <button
+          (click)="cerrarSesion()"
+          class="text-slate-500 hover:text-slate-300 flex items-center gap-4 px-6 py-3 transition-all">
+          <span class="material-symbols-outlined">logout</span>
+          <span>Salir</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Contenido principal -->
+    <main class="flex-1 md:ml-64 p-8 lg:p-12 max-w-7xl">
+
+      <section class="mb-12">
+        <h1 class="font-headline text-5xl font-bold text-on-surface tracking-tighter mb-4">
+          Configuración
+        </h1>
+        <p class="font-body text-on-surface-variant max-w-2xl leading-relaxed">
+          Administra tu cuenta y preferencias del sistema.
+        </p>
+      </section>
+
+      <!-- Tarjeta de perfil -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="bg-surface-container-low rounded-2xl p-8 border border-outline-variant/20">
+          <h2 class="font-headline text-xl font-bold text-on-surface mb-6 flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary">person</span>
+            Información de cuenta
+          </h2>
+          <div class="flex items-center gap-6 mb-8">
+            <div class="w-16 h-16 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-2xl font-bold">
+              {{ obtenerIniciales() }}
+            </div>
+            <div>
+              <div class="text-lg font-bold text-on-surface">{{ usuario()?.nombre }}</div>
+              <div class="text-sm text-on-surface-variant">{{ usuario()?.email }}</div>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <div class="bg-surface-container-highest rounded-xl p-4">
+              <div class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-1">Nombre</div>
+              <div class="text-on-surface">{{ usuario()?.nombre }}</div>
+            </div>
+            <div class="bg-surface-container-highest rounded-xl p-4">
+              <div class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-1">Email</div>
+              <div class="text-on-surface">{{ usuario()?.email }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta de acciones -->
+        <div class="bg-surface-container-low rounded-2xl p-8 border border-outline-variant/20">
+          <h2 class="font-headline text-xl font-bold text-on-surface mb-6 flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary">tune</span>
+            Acciones
+          </h2>
+          <div class="space-y-4">
+            <button
+              (click)="irDashboard()"
+              class="w-full poly-gradient text-on-primary-container font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-3 active:scale-95 transition-all">
+              <span class="material-symbols-outlined">add</span>
+              Generar nuevo prompt
+            </button>
+            <button
+              (click)="irHistorial()"
+              class="w-full bg-surface-container-highest text-on-surface font-medium py-4 px-6 rounded-xl flex items-center justify-center gap-3 hover:bg-surface-bright transition-all">
+              <span class="material-symbols-outlined">history</span>
+              Ver historial de prompts
+            </button>
+            <button
+              (click)="cerrarSesion()"
+              class="w-full bg-error-container/20 border border-error/20 text-error font-medium py-4 px-6 rounded-xl flex items-center justify-center gap-3 hover:bg-error-container/30 transition-all">
+              <span class="material-symbols-outlined">logout</span>
+              Cerrar sesión
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Nav móvil -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-950/90 backdrop-blur-md flex justify-around items-center py-4 px-6 z-50">
+    <button
+      (click)="irDashboard()"
+      class="flex flex-col items-center gap-1 text-slate-500">
+      <span class="material-symbols-outlined">dashboard</span>
+      <span class="text-[10px] font-bold uppercase tracking-widest">Dash</span>
+    </button>
+    <button
+      (click)="irHistorial()"
+      class="flex flex-col items-center gap-1 text-slate-500">
+      <span class="material-symbols-outlined">history</span>
+      <span class="text-[10px] font-bold uppercase tracking-widest">Historial</span>
+    </button>
+    <button class="flex flex-col items-center gap-1 text-primary">
+      <span class="material-symbols-outlined">settings</span>
+      <span class="text-[10px] font-bold uppercase tracking-widest">Config</span>
+    </button>
+  </nav>
+
+</div>

@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-surface-tint: #adc6ff;
+  --color-background: #0f131e;
+  --color-outline: #8c909f;
+  --color-tertiary: #ffb3ad;
+  --color-on-secondary: #182f59;
+  --color-surface-container-low: #171b27;
+  --color-surface: #0f131e;
+  --color-outline-variant: #424754;
+  --color-surface-dim: #0f131e;
+  --color-inverse-primary: #005ac2;
+  --color-on-secondary-container: #9fb5e7;
+  --color-inverse-on-surface: #2c303c;
+  --color-surface-container-highest: #313441;
+  --color-surface-container-lowest: #0a0e19;
+  --color-error-container: #93000a;
+  --color-secondary-container: #304671;
+  --color-inverse-surface: #dfe2f2;
+  --color-surface-container-high: #262a36;
+  --color-surface-bright: #353945;
+  --color-surface-container: #1b1f2b;
+  --color-primary: #adc6ff;
+  --color-primary-container: #4d8eff;
+  --color-on-error: #690005;
+  --color-secondary: #b1c6f9;
+  --color-surface-variant: #313441;
+  --color-on-surface-variant: #c2c6d6;
+  --color-on-background: #dfe2f2;
+  --color-on-primary-container: #00285d;
+  --color-on-error-container: #ffdad6;
+  --color-on-surface: #dfe2f2;
+  --color-on-primary: #002e6a;
+  --color-tertiary-container: #ff5451;
+  --color-error: #ffb4ab;
+
+  --font-family-headline: 'Space Grotesk', sans-serif;
+  --font-family-body: 'Inter', sans-serif;
+  --font-family-label: 'Inter', sans-serif;
+
+  --radius-xl: 0.5rem;
+  --radius-full: 0.75rem;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.glass-panel {
+  background: rgba(38, 42, 54, 0.6);
+  backdrop-filter: blur(24px);
+}
+
+.poly-gradient {
+  background: linear-gradient(135deg, #adc6ff 0%, #4d8eff 100%);
+}
+
+.ghost-border {
+  border: 1px solid rgba(66, 71, 84, 0.15);
+}

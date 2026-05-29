@@ -1,0 +1,294 @@
+<div class="bg-surface-container-lowest min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-slate-950/60 backdrop-blur-xl font-headline tracking-tight sticky top-0 z-50">
+    <div class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+      <div class="text-2xl font-bold tracking-tighter text-primary uppercase">Generador de prompts de IA</div>
+      <nav class="hidden md:flex items-center gap-8">
+        <button class="text-primary font-bold border-b-2 border-primary pb-1">Dashboard</button>
+        <button
+          (click)="irHistorial()"
+          class="text-slate-400 hover:text-slate-200 transition-colors">
+          Historial
+        </button>
+      </nav>
+      <div class="flex items-center gap-4">
+        <button
+          (click)="cerrarSesion()"
+          class="text-slate-400 hover:text-slate-200 transition-colors px-3 py-2 text-sm font-medium">
+          Salir
+        </button>
+        <div class="flex items-center gap-3 bg-slate-800/50 rounded-lg px-3 py-1.5">
+          <span class="text-sm font-medium text-slate-200">{{ usuario()?.nombre }}</span>
+          <div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-xs font-bold">
+            {{ obtenerIniciales() }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex min-h-screen">
+
+    <!-- Sidebar -->
+    <aside class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 bg-slate-950 py-8 gap-4 pt-24 z-40 font-headline font-medium">
+      <div class="px-6 mb-8">
+        <div class="flex items-center gap-3">
+          
+          <div>
+            <div class="text-sm font-bold text-on-surface">{{ usuario()?.nombre }}</div>
+            <div class="text-[10px] text-slate-500 uppercase tracking-widest">Generador de prompts de IA</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-1 pr-4">
+        <div class="bg-slate-800/80 text-primary rounded-r-full flex items-center gap-4 px-6 py-3 transition-all duration-300">
+          <span class="material-symbols-outlined">dashboard</span>
+          <span>Dashboard</span>
+        </div>
+        <button
+          (click)="irHistorial()"
+          class="text-slate-500 hover:text-slate-300 flex items-center gap-4 px-6 py-3 transition-all duration-300">
+          <span class="material-symbols-outlined">history</span>
+          <span>Historial</span>
+        </button>
+      </div>
+
+      <div class="mt-8 px-6">
+        <button
+          (click)="nuevoPrompt()"
+          class="w-full poly-gradient text-on-primary-container font-bold py-3 px-4 rounded-xl active:scale-90 transition-transform flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-sm">add</span>
+          <span>Nuevo Prompt</span>
+        </button>
+      </div>
+
+      <div class="mt-auto flex flex-col gap-1 pr-4">
+        <button
+  (click)="irConfiguracion()"
+  class="text-slate-500 hover:text-slate-300 flex items-center gap-4 px-6 py-3 transition-all">
+  <span class="material-symbols-outlined">settings</span>
+  <span>Configuración</span>
+</button>
+        <button
+          (click)="cerrarSesion()"
+          class="text-slate-500 hover:text-slate-300 flex items-center gap-4 px-6 py-3 transition-all">
+          <span class="material-symbols-outlined">logout</span>
+          <span>Salir</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Contenido principal -->
+    <main class="flex-1 md:ml-64 p-8 lg:p-12 max-w-7xl">
+
+      <section class="mb-12">
+        <h1 class="font-headline text-5xl font-bold text-on-surface tracking-tighter mb-4">
+          Generador <span class="text-primary"> de </span> Prompts con IA
+        </h1>
+        <p class="font-body text-on-surface-variant max-w-2xl leading-relaxed">
+          Sube tu documentación para generar prompts optimizados para IA.
+          El motor analiza estructuras técnicas para generar flujos lógicos precisos.
+        </p>
+      </section>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+        <div class="lg:col-span-8 flex flex-col gap-6">
+
+          @if (promptGenerado()) {
+            <div class="bg-surface-container-low rounded-2xl p-8 border border-outline-variant/20">
+              <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                  <span class="material-symbols-outlined text-primary">auto_awesome</span>
+                  <h3 class="font-headline text-xl font-bold text-on-surface">Prompt Generado</h3>
+                </div>
+                <div class="flex gap-3">
+                  <button
+                    (click)="copiarPrompt()"
+                    class="flex items-center gap-2 px-4 py-2 bg-surface-container-highest text-on-surface-variant hover:text-on-surface rounded-xl text-sm transition-all">
+                    <span class="material-symbols-outlined text-sm">content_copy</span>
+                    Copiar
+                  </button>
+                  <button
+                    (click)="descargarPrompt()"
+                    class="flex items-center gap-2 px-4 py-2 bg-surface-container-highest text-on-surface-variant hover:text-on-surface rounded-xl text-sm transition-all">
+                    <span class="material-symbols-outlined text-sm">download</span>
+                    Descargar
+                  </button>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span class="px-3 py-1.5 rounded-full bg-primary text-on-primary text-[10px] font-bold uppercase tracking-widest">
+                  {{ promptGenerado().tipoProyecto }}
+                </span>
+                @for (tech of promptGenerado().tecnologiasDetectadas; track tech) {
+                  <span class="px-3 py-1.5 rounded-full bg-surface-container-highest text-on-surface-variant text-[10px] font-bold">
+                    {{ tech }}
+                  </span>
+                }
+              </div>
+
+              <pre class="bg-surface-container-highest rounded-xl p-6 text-on-surface-variant text-sm leading-relaxed overflow-auto max-h-96 whitespace-pre-wrap font-body">{{ promptGenerado().promptFinal }}</pre>
+
+              <button
+                (click)="nuevoPrompt()"
+                class="mt-6 flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors">
+                <span class="material-symbols-outlined text-sm">arrow_back</span>
+                Generar otro prompt
+              </button>
+            </div>
+          }
+
+          @if (!promptGenerado()) {
+            <div class="relative group">
+              <div class="absolute -inset-1 bg-gradient-to-r from-primary/20 to-transparent rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+              <div
+                (dragover)="onDragOver($event)"
+                (dragleave)="onDragLeave()"
+                (drop)="onDrop($event)"
+                [class.border-primary]="arrastrando()"
+                [class.bg-surface-container]="arrastrando()"
+                class="relative bg-surface-container-low min-h-[400px] rounded-2xl flex flex-col items-center justify-center p-12 border border-dashed border-outline-variant/25 hover:bg-surface-container transition-all duration-300 cursor-pointer"
+                (click)="fileInput.click()">
+
+                <input
+                  #fileInput
+                  type="file"
+                  accept=".pdf,.docx,.md,.txt"
+                  class="hidden"
+                  (change)="onSeleccionarArchivo($event)"/>
+
+                <div class="w-20 h-20 rounded-full bg-surface-container-highest flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <span class="material-symbols-outlined text-primary text-4xl">upload_file</span>
+                </div>
+                <h3 class="font-headline text-2xl font-medium text-on-surface mb-2">
+                  {{ arrastrando() ? 'Suelta el archivo aquí' : 'Arrastra tu archivo aquí' }}
+                </h3>
+                <p class="text-on-surface-variant text-sm mb-8">PDF, WORD, MD o TXT (máx. 10MB)</p>
+                <div class="flex gap-4">
+                  <span class="px-4 py-2 bg-surface-container-highest text-on-surface-variant text-[10px] font-bold uppercase tracking-widest rounded-lg">.pdf</span>
+                  <span class="px-4 py-2 bg-surface-container-highest text-on-surface-variant text-[10px] font-bold uppercase tracking-widest rounded-lg">.docx</span>
+                  <span class="px-4 py-2 bg-surface-container-highest text-on-surface-variant text-[10px] font-bold uppercase tracking-widest rounded-lg">.md</span>
+                  <span class="px-4 py-2 bg-surface-container-highest text-on-surface-variant text-[10px] font-bold uppercase tracking-widest rounded-lg">.txt</span>
+                </div>
+              </div>
+            </div>
+
+            @if (subiendo() || generando()) {
+              <div class="bg-surface p-6 rounded-2xl">
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">
+                      {{ subiendo() ? 'Subiendo archivo...' : 'Generando prompt...' }}
+                    </span>
+                  </div>
+                  <span class="text-xs text-primary font-medium tracking-tighter">{{ progreso() }}%</span>
+                </div>
+                <div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+                  <div
+                    class="h-full poly-gradient transition-all duration-500"
+                    [style.width.%]="progreso()">
+                  </div>
+                </div>
+              </div>
+            }
+
+            @if (errorMensaje()) {
+              <div class="bg-error-container/20 border border-error/20 text-error rounded-xl px-4 py-3 text-sm flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">error</span>
+                {{ errorMensaje() }}
+              </div>
+            }
+          }
+        </div>
+
+        <div class="lg:col-span-4 flex flex-col gap-6">
+          <div class="bg-surface-container-high p-6 rounded-2xl flex flex-col gap-6">
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Documento Activo</h4>
+              <span class="material-symbols-outlined text-on-surface-variant text-sm">more_horiz</span>
+            </div>
+
+            @if (documentoSubido()) {
+              <div class="bg-surface-container-highest p-4 rounded-xl flex items-center gap-4">
+                <div class="w-12 h-12 bg-surface-container-low rounded-lg flex items-center justify-center">
+                  <span class="material-symbols-outlined text-primary">description</span>
+                </div>
+                <div class="overflow-hidden">
+                  <div class="text-sm font-bold text-on-surface truncate">{{ documentoSubido()!.nombreArchivo }}</div>
+                  <div class="text-[10px] text-on-surface-variant uppercase tracking-tighter">
+                    {{ formatearTamano(documentoSubido()!.tamanoBytes) }} • {{ documentoSubido()!.tipoArchivo | uppercase }}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                (click)="generarPrompt()"
+                [disabled]="generando()"
+                class="w-full poly-gradient py-4 px-6 rounded-xl text-on-primary-container font-bold flex items-center justify-center gap-3 active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed">
+                @if (generando()) {
+                  <span class="material-symbols-outlined animate-spin text-sm">progress_activity</span>
+                  Generando...
+                } @else {
+                  <span>GENERAR PROMPT</span>
+                  <span class="material-symbols-outlined">bolt</span>
+                }
+              </button>
+            } @else {
+              <div class="bg-surface-container-highest p-4 rounded-xl flex items-center justify-center h-24">
+                <p class="text-on-surface-variant text-xs uppercase tracking-widest">Sin archivo activo</p>
+              </div>
+            }
+          </div>
+
+          <div class="bg-surface-container-low p-6 rounded-2xl">
+            <h4 class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-4">Context Logic</h4>
+            <div class="flex flex-wrap gap-2">
+              <div class="px-3 py-1.5 rounded-full bg-primary text-on-primary text-[10px] font-bold">CHAIN_OF_THOUGHT</div>
+              <div class="px-3 py-1.5 rounded-full bg-surface-container-highest text-on-surface-variant text-[10px] font-bold hover:bg-primary hover:text-on-primary transition-colors cursor-pointer">FEW_SHOT</div>
+              <div class="px-3 py-1.5 rounded-full bg-surface-container-highest text-on-surface-variant text-[10px] font-bold hover:bg-primary hover:text-on-primary transition-colors cursor-pointer">SEMANTIC_RANKING</div>
+              <div class="px-3 py-1.5 rounded-full bg-surface-container-highest text-on-surface-variant text-[10px] font-bold hover:bg-primary hover:text-on-primary transition-colors cursor-pointer">ZERO_ERROR</div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl overflow-hidden h-48 relative">
+            <img
+              alt="Abstract Neural Network"
+              class="w-full h-full object-cover grayscale contrast-125 opacity-40"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvW0Bz7TOeUK8hK0eL02CGp2u56IOHTz3d_Tii5lo7Bw4mtNaeKB-sbRNbGfy9TTKnwCS3d1b1jRc9F4kvSdLbXxL4KhfqbCVsTMgDW2Zu5lOW2ChLxl4Hz0NkfJ6KG4toOZYBEAWvONWXvUWBiuAED3ZDtRgBMLrzCqBDhxRTOFv8sQK9R8NOComGg4NOZCg2SNLqgWbMqKd8k50831aYk83yIx6fjlrEF-wLQzASG1FjWQW0HZks1Hoph3wm3slD5eOYHOGfsNA"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent"></div>
+            <div class="absolute bottom-4 left-4">
+              <p class="text-[10px] font-bold uppercase tracking-widest text-primary">Sistema Online</p>
+              <p class="text-[10px] text-on-surface-variant">Core Engine 2.4.0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Nav móvil -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-950/90 backdrop-blur-md flex justify-around items-center py-4 px-6 z-50">
+  <button class="flex flex-col items-center gap-1 text-primary">
+    <span class="material-symbols-outlined">dashboard</span>
+    <span class="text-[10px] font-bold uppercase tracking-widest">Dash</span>
+  </button>
+  <button
+    (click)="irHistorial()"
+    class="flex flex-col items-center gap-1 text-slate-500">
+    <span class="material-symbols-outlined">history</span>
+    <span class="text-[10px] font-bold uppercase tracking-widest">Historial</span>
+  </button>
+  <button
+    (click)="irConfiguracion()"
+    class="flex flex-col items-center gap-1 text-slate-500">
+    <span class="material-symbols-outlined">settings</span>
+    <span class="text-[10px] font-bold uppercase tracking-widest">Config</span>
+  </button>
+</nav>
+
+</div>
